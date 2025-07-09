@@ -92,33 +92,42 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
   };
 
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Trend Analysis</CardTitle>
-          <Button onClick={handleExportReport} disabled={!query.trim() || reportMutation.isPending}>
+    <Card className="mb-4 sm:mb-6">
+      <CardHeader className="pb-3 sm:pb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+          <CardTitle className="text-lg sm:text-xl">Trend Analysis</CardTitle>
+          <Button 
+            onClick={handleExportReport} 
+            disabled={!query.trim() || reportMutation.isPending}
+            className="w-full sm:w-auto"
+            size="sm"
+          >
             {reportMutation.isPending ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
               <Download className="w-4 h-4 mr-2" />
             )}
-            Export Report
+            <span className="sm:inline">Export Report</span>
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-0">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
             <div className="flex-1">
               <Input
                 type="text"
                 placeholder="Enter product, service, or topic..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="h-12"
+                className="h-10 sm:h-12 text-sm sm:text-base"
               />
             </div>
-            <Button type="submit" className="h-12 px-6" disabled={isLoading || analyzeMutation.isPending}>
+            <Button 
+              type="submit" 
+              className="h-10 sm:h-12 px-4 sm:px-6" 
+              disabled={isLoading || analyzeMutation.isPending}
+            >
               {isLoading || analyzeMutation.isPending ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               ) : (
@@ -128,12 +137,12 @@ export function SearchForm({ onSearch, isLoading }: SearchFormProps) {
             </Button>
           </div>
           
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <Badge
                 key={category.name}
                 variant={category.active ? "default" : "outline"}
-                className="cursor-pointer hover:bg-secondary"
+                className="cursor-pointer hover:bg-secondary text-xs sm:text-sm"
               >
                 {category.name}
               </Badge>

@@ -31,20 +31,20 @@ export function SentimentDisplay({ analysis }: SentimentDisplayProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Sentiment Breakdown</CardTitle>
+      <CardHeader className="pb-3 sm:pb-6">
+        <CardTitle className="text-base sm:text-lg">Sentiment Breakdown</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
+      <CardContent className="pt-0">
+        <div className="space-y-3 sm:space-y-4">
           {sentiments.map((sentiment) => (
             <div key={sentiment.label} className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className={`w-4 h-4 rounded-full ${sentiment.dotColor}`} />
-                <span className="text-sm text-gray-700">{sentiment.label}</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0 ${sentiment.dotColor}`} />
+                <span className="text-xs sm:text-sm text-gray-700 truncate">{sentiment.label}</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Progress value={sentiment.percentage} className="w-24" />
-                <span className="text-sm font-medium text-gray-900 min-w-[3rem]">
+              <div className="flex items-center space-x-2 ml-2">
+                <Progress value={sentiment.percentage} className="w-16 sm:w-24" />
+                <span className="text-xs sm:text-sm font-medium text-gray-900 min-w-[2.5rem] sm:min-w-[3rem]">
                   {sentiment.percentage}%
                 </span>
               </div>
@@ -52,9 +52,9 @@ export function SentimentDisplay({ analysis }: SentimentDisplayProps) {
           ))}
         </div>
         
-        <div className="mt-6 p-4 bg-secondary/50 rounded-lg">
-          <h4 className="font-medium text-gray-900 mb-2">AI Sentiment Summary</h4>
-          <p className="text-sm text-gray-700">{analysis.aiInsights}</p>
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-secondary/50 rounded-lg">
+          <h4 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">AI Sentiment Summary</h4>
+          <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">{analysis.aiInsights}</p>
         </div>
       </CardContent>
     </Card>

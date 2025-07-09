@@ -8,29 +8,35 @@ interface TrendChartProps {
 export function TrendChart({ data }: TrendChartProps) {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Mention Trends (Last 7 Days)</CardTitle>
+      <CardHeader className="pb-3 sm:pb-6">
+        <CardTitle className="text-base sm:text-lg">Mention Trends (Last 7 Days)</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-80">
+      <CardContent className="pt-0">
+        <div className="h-64 sm:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200" />
               <XAxis 
                 dataKey="day" 
-                className="text-sm"
-                tick={{ fill: '#6B7280' }}
+                className="text-xs sm:text-sm"
+                tick={{ fill: '#6B7280', fontSize: '12px' }}
+                interval={0}
+                angle={-45}
+                textAnchor="end"
+                height={60}
               />
               <YAxis 
-                className="text-sm"
-                tick={{ fill: '#6B7280' }}
+                className="text-xs sm:text-sm"
+                tick={{ fill: '#6B7280', fontSize: '12px' }}
+                width={40}
               />
               <Line 
                 type="monotone" 
                 dataKey="mentions" 
                 stroke="hsl(var(--primary))" 
                 strokeWidth={2}
-                dot={{ fill: "hsl(var(--primary))", strokeWidth: 2 }}
+                dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6 }}
               />
             </LineChart>
           </ResponsiveContainer>

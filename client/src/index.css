@@ -86,3 +86,39 @@
     @apply bg-gray-500;
   }
 }
+
+@layer utilities {
+  /* Improve touch targets for mobile */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Better text scaling for mobile */
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+  
+  /* Responsive padding */
+  .p-responsive {
+    @apply p-3 sm:p-4 md:p-6;
+  }
+  
+  /* Better button sizing for mobile */
+  .btn-mobile {
+    @apply py-2 px-3 sm:py-2.5 sm:px-4 text-sm sm:text-base;
+  }
+}
+
+/* Improve scroll behavior on mobile */
+@supports (overscroll-behavior: contain) {
+  .sidebar-scroll {
+    overscroll-behavior: contain;
+  }
+}
+
+/* Better tap highlighting */
+@media (hover: none) {
+  .tap-highlight {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+}
