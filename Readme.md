@@ -1,6 +1,6 @@
 # 📊 TrendPulse.AI — Market Intelligence Dashboard
 
-## 📌 Overview
+## Overview
 
 **TrendPulse.AI** is a full-stack AI-powered market intelligence dashboard that analyzes trends and generates insights using AI. The application provides comprehensive market analysis including sentiment analysis, regional data, keyword trends, and AI-powered recommendations for market opportunities and strategies.
 
@@ -26,7 +26,7 @@ Built with a modern MERN (MongoDB, Express, React, Node) stack, AI via Google Ge
 
 | Dashboard View | AI Insights | Geo Heatmap |
 |:---------------|:-------------|:-------------|
-| ![Dashboard Screenshot](screenshots/dashboard.png) | ![AI Insights Screenshot](screenshots/ai-insights.png) | ![Heatmap Screenshot](screenshots/heatmap.png) |
+| ![Dashboard Screenshot](dashboard.jpg) | ![AI Insights Screenshot](ai.jpg) | ![Heatmap Screenshot](heatmap.jpg) |
 
 > 📸 **Create a `/screenshots/` folder in your repo and add images as `dashboard.png`, `ai-insights.png`, `heatmap.png` etc.**
 
