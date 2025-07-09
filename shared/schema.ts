@@ -26,6 +26,23 @@ export const trendAnalyses = pgTable("trend_analyses", {
   marketOpportunity: text("market_opportunity").notNull(),
   recommendedStrategy: text("recommended_strategy").notNull(),
   keyInsight: text("key_insight").notNull(),
+  viralPrediction: jsonb("viral_prediction").$type<{
+    isLikelyToGoViral: boolean;
+    confidence: number;
+    reason: string;
+  }>(),
+  competitorAnalysis: jsonb("competitor_analysis").$type<{
+    mainCompetitor: string;
+    competitorSentiment: number;
+    competitorMentions: number;
+    advantage: string;
+  }>(),
+  contentSuggestions: jsonb("content_suggestions").$type<string[]>(),
+  campaignTitles: jsonb("campaign_titles").$type<string[]>(),
+  naijaSentiment: jsonb("naija_sentiment").$type<{
+    pidginPhrases: string[];
+    streetSlangAnalysis: string;
+  }>(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

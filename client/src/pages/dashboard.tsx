@@ -8,6 +8,10 @@ import { SentimentDisplay } from "@/components/sentiment-display";
 import { RegionalMap } from "@/components/regional-map";
 import { KeywordsDisplay } from "@/components/keywords-display";
 import { AIInsights } from "@/components/ai-insights";
+import { ViralPrediction } from "@/components/viral-prediction";
+import { CompetitorAnalysis } from "@/components/competitor-analysis";
+import { ContentGenerator } from "@/components/content-generator";
+import { NaijaSentiment } from "@/components/naija-sentiment";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -85,6 +89,16 @@ export default function Dashboard() {
                     <RegionalMap regionalData={analysis.regionalData} />
                   </div>
                   <KeywordsDisplay keywords={analysis.keywords} />
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                  <ViralPrediction analysis={analysis} />
+                  <CompetitorAnalysis analysis={analysis} />
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                  <ContentGenerator analysis={analysis} />
+                  <NaijaSentiment analysis={analysis} />
                 </div>
 
                 <AIInsights analysis={analysis} />

@@ -21,11 +21,28 @@ export interface TrendAnalysisResult {
   marketOpportunity: string;
   recommendedStrategy: string;
   keyInsight: string;
+  viralPrediction: {
+    isLikelyToGoViral: boolean;
+    confidence: number;
+    reason: string;
+  };
+  competitorAnalysis: {
+    mainCompetitor: string;
+    competitorSentiment: number;
+    competitorMentions: number;
+    advantage: string;
+  };
+  contentSuggestions: string[];
+  campaignTitles: string[];
+  naijaSentiment: {
+    pidginPhrases: string[];
+    streetSlangAnalysis: string;
+  };
 }
 
 export async function generateTrendAnalysis(query: string): Promise<TrendAnalysisResult> {
   try {
-    const systemPrompt = `You are an AI market intelligence analyst. Generate realistic market trend analysis data for the given product/service/topic. Return JSON in this exact format:
+    const systemPrompt = `You are an AI market intelligence analyst specializing in Nigerian market trends. Generate comprehensive market trend analysis data for the given product/service/topic. Return JSON in this exact format:
     {
       "totalMentions": number,
       "sentimentScore": number (1-100),
@@ -41,10 +58,27 @@ export async function generateTrendAnalysis(query: string): Promise<TrendAnalysi
       "aiInsights": string (brief summary of sentiment and trends),
       "marketOpportunity": string (market opportunity analysis),
       "recommendedStrategy": string (marketing strategy recommendations),
-      "keyInsight": string (key insight about timing or engagement)
+      "keyInsight": string (key insight about timing or engagement),
+      "viralPrediction": {
+        "isLikelyToGoViral": boolean,
+        "confidence": number (0-100),
+        "reason": string
+      },
+      "competitorAnalysis": {
+        "mainCompetitor": string,
+        "competitorSentiment": number (1-100),
+        "competitorMentions": number,
+        "advantage": string
+      },
+      "contentSuggestions": [string array of 4 social media captions using Nigerian slang],
+      "campaignTitles": [string array of 4 catchy campaign titles],
+      "naijaSentiment": {
+        "pidginPhrases": [string array of 3 pidgin phrases],
+        "streetSlangAnalysis": string
+      }
     }
     
-    Make the data realistic and relevant to the Nigerian market where appropriate.`;
+    Make the data realistic and relevant to the Nigerian market. Use authentic Nigerian pidgin English and street slang where appropriate.`;
 
     const response = await genai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -86,9 +120,35 @@ export async function generateTrendAnalysis(query: string): Promise<TrendAnalysi
             aiInsights: { type: "string" },
             marketOpportunity: { type: "string" },
             recommendedStrategy: { type: "string" },
-            keyInsight: { type: "string" }
+            keyInsight: { type: "string" },
+            viralPrediction: {
+              type: "object",
+              properties: {
+                isLikelyToGoViral: { type: "boolean" },
+                confidence: { type: "number" },
+                reason: { type: "string" }
+              }
+            },
+            competitorAnalysis: {
+              type: "object",
+              properties: {
+                mainCompetitor: { type: "string" },
+                competitorSentiment: { type: "number" },
+                competitorMentions: { type: "number" },
+                advantage: { type: "string" }
+              }
+            },
+            contentSuggestions: { type: "array", items: { type: "string" } },
+            campaignTitles: { type: "array", items: { type: "string" } },
+            naijaSentiment: {
+              type: "object",
+              properties: {
+                pidginPhrases: { type: "array", items: { type: "string" } },
+                streetSlangAnalysis: { type: "string" }
+              }
+            }
           },
-          required: ["totalMentions", "sentimentScore", "positivePercentage", "negativePercentage", "neutralPercentage", "topRegion", "trendDirection", "growthPercentage", "keywords", "regionalData", "trendData", "aiInsights", "marketOpportunity", "recommendedStrategy", "keyInsight"]
+          required: ["totalMentions", "sentimentScore", "positivePercentage", "negativePercentage", "neutralPercentage", "topRegion", "trendDirection", "growthPercentage", "keywords", "regionalData", "trendData", "aiInsights", "marketOpportunity", "recommendedStrategy", "keyInsight", "viralPrediction", "competitorAnalysis", "contentSuggestions", "campaignTitles", "naijaSentiment"]
         }
       },
       contents: `Generate market trend analysis for: ${query}`,
@@ -128,5 +188,122 @@ export async function generatePDFReport(analysis: TrendAnalysisResult, query: st
   } catch (error) {
     console.error("Failed to generate PDF report:", error);
     throw new Error("Failed to generate report. Please try again.");
+  }
+}
+
+export async function generateContentIdeas(topic: string): Promise<string[]> {
+  try {
+    const systemPrompt = `You are a Nigerian social media content creator. Generate 5 viral social media captions for the topic "${topic}". Use authentic Nigerian pidgin English, street slang, and trending hashtags. Make them engaging and shareable.`;
+
+    const response = await genai.models.generateContent({
+      model: "gemini-2.5-flash",
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "object",
+          properties: {
+            captions: { type: "array", items: { type: "string" } }
+          }
+        }
+      },
+      contents: `Generate social media captions for: ${topic}`,
+    });
+
+    const result = JSON.parse(response.text || '{"captions": []}');
+    return result.captions || [];
+  } catch (error) {
+    console.error("Failed to generate content ideas:", error);
+    throw new Error("Failed to generate content ideas. Please try again.");
+  }
+}
+
+export async function analyzePidginSentiment(text: string): Promise<{ sentiment: string; confidence: number; translation: string }> {
+  try {
+    const systemPrompt = `You are an expert in Nigerian pidgin English and street slang. Analyze the sentiment of the given text and provide a translation if needed. Return JSON format:
+    {
+      "sentiment": "Positive" | "Negative" | "Neutral",
+      "confidence": number (0-100),
+      "translation": "English translation if pidgin/slang detected"
+    }`;
+
+    const response = await genai.models.generateContent({
+      model: "gemini-2.5-flash",
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "object",
+          properties: {
+            sentiment: { type: "string" },
+            confidence: { type: "number" },
+            translation: { type: "string" }
+          }
+        }
+      },
+      contents: `Analyze this text: "${text}"`,
+    });
+
+    const result = JSON.parse(response.text || '{"sentiment": "Neutral", "confidence": 50, "translation": ""}');
+    return result;
+  } catch (error) {
+    console.error("Failed to analyze pidgin sentiment:", error);
+    throw new Error("Failed to analyze sentiment. Please try again.");
+  }
+}
+
+export async function generateCampaignTitles(topic: string): Promise<string[]> {
+  try {
+    const systemPrompt = `You are a Nigerian marketing expert. Generate 5 catchy, viral campaign titles for "${topic}". Use Nigerian culture references, popular phrases, and make them memorable and shareable.`;
+
+    const response = await genai.models.generateContent({
+      model: "gemini-2.5-flash",
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "object",
+          properties: {
+            titles: { type: "array", items: { type: "string" } }
+          }
+        }
+      },
+      contents: `Generate campaign titles for: ${topic}`,
+    });
+
+    const result = JSON.parse(response.text || '{"titles": []}');
+    return result.titles || [];
+  } catch (error) {
+    console.error("Failed to generate campaign titles:", error);
+    throw new Error("Failed to generate campaign titles. Please try again.");
+  }
+}
+
+export async function predictViralPotential(topic: string, recentTrends: any[]): Promise<{ isLikelyToGoViral: boolean; confidence: number; reason: string }> {
+  try {
+    const systemPrompt = `You are an AI trend analyst specializing in viral content prediction. Analyze the given topic and recent trend data to predict if it will go viral in the next 24 hours. Consider factors like mention growth, sentiment spikes, and engagement patterns.`;
+
+    const response = await genai.models.generateContent({
+      model: "gemini-2.5-flash",
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "object",
+          properties: {
+            isLikelyToGoViral: { type: "boolean" },
+            confidence: { type: "number" },
+            reason: { type: "string" }
+          }
+        }
+      },
+      contents: `Predict viral potential for: ${topic}. Recent trends: ${JSON.stringify(recentTrends)}`,
+    });
+
+    const result = JSON.parse(response.text || '{"isLikelyToGoViral": false, "confidence": 50, "reason": "Insufficient data"}');
+    return result;
+  } catch (error) {
+    console.error("Failed to predict viral potential:", error);
+    throw new Error("Failed to predict viral potential. Please try again.");
   }
 }

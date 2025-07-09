@@ -2,7 +2,14 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { searchQuerySchema } from "@shared/schema";
-import { generateTrendAnalysis, generatePDFReport } from "./services/gemini";
+import { 
+  generateTrendAnalysis, 
+  generatePDFReport, 
+  generateContentIdeas,
+  analyzePidginSentiment,
+  generateCampaignTitles,
+  predictViralPotential
+} from "./services/gemini";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -69,6 +76,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error generating report:", error);
       res.status(500).json({ 
         message: error instanceof Error ? error.message : "Failed to generate report" 
+      });
+    }
+  });
+
+  // Generate content ideas
+  app.post("/api/generate-content", async (req, res) => {
+    try {
+      const { topic } = req.body;
+      if (!topic) {
+        return res.status(400).json({ message: "Topic is required" });
+      }
+
+      const contentIdeas = await generateContentIdeas(topic);
+      res.json({ ideas: contentIdeas });
+    } catch (error) {
+      console.error("Error generating content ideas:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to generate content ideas" 
+      });
+    }
+  });
+
+  // Analyze pidgin sentiment
+  app.post("/api/analyze-pidgin", async (req, res) => {
+    try {
+      const { text } = req.body;
+      if (!text) {
+        return res.status(400).json({ message: "Text is required" });
+      }
+
+      const analysis = await analyzePidginSentiment(text);
+      res.json(analysis);
+    } catch (error) {
+      console.error("Error analyzing pidgin sentiment:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to analyze pidgin sentiment" 
+      });
+    }
+  });
+
+  // Generate campaign titles
+  app.post("/api/generate-campaigns", async (req, res) => {
+    try {
+      const { topic } = req.body;
+      if (!topic) {
+        return res.status(400).json({ message: "Topic is required" });
+      }
+
+      const titles = await generateCampaignTitles(topic);
+      res.json({ titles });
+    } catch (error) {
+      console.error("Error generating campaign titles:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to generate campaign titles" 
+      });
+    }
+  });
+
+  // Predict viral potential
+  app.post("/api/predict-viral", async (req, res) => {
+    try {
+      const { topic } = req.body;
+      if (!topic) {
+        return res.status(400).json({ message: "Topic is required" });
+      }
+
+      // Get recent trends for context
+      const recentTrends = await storage.getAllTrendAnalyses();
+      const prediction = await predictViralPotential(topic, recentTrends.slice(0, 5));
+      
+      res.json(prediction);
+    } catch (error) {
+      console.error("Error predicting viral potential:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to predict viral potential" 
       });
     }
   });
