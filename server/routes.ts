@@ -7,7 +7,6 @@ import {
   generatePDFReport, 
   generateContentIdeas,
   analyzePidginSentiment,
-  generateCampaignTitles,
   predictViralPotential
 } from "./services/gemini";
 

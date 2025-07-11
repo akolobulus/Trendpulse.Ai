@@ -53,13 +53,18 @@ export class MemStorage implements IStorage {
       topRegion: analysis.topRegion,
       trendDirection: analysis.trendDirection,
       growthPercentage: analysis.growthPercentage,
-      keywords: analysis.keywords as string[],
-      regionalData: analysis.regionalData as { region: string; percentage: number }[],
-      trendData: analysis.trendData as { day: string; mentions: number }[],
+      keywords: analysis.keywords,
+      regionalData: analysis.regionalData,
+      trendData: analysis.trendData,
       aiInsights: analysis.aiInsights,
       marketOpportunity: analysis.marketOpportunity,
       recommendedStrategy: analysis.recommendedStrategy,
-      keyInsight: analysis.keyInsight
+      keyInsight: analysis.keyInsight,
+      viralPrediction: analysis.viralPrediction,
+      competitorAnalysis: analysis.competitorAnalysis,
+      contentSuggestions: analysis.contentSuggestions,
+      campaignTitles: analysis.campaignTitles,
+      naijaSentiment: analysis.naijaSentiment
     };
     this.trendAnalyses.set(id, trendAnalysis);
     return trendAnalysis;

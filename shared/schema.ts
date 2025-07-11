@@ -30,19 +30,19 @@ export const trendAnalyses = pgTable("trend_analyses", {
     isLikelyToGoViral: boolean;
     confidence: number;
     reason: string;
-  }>(),
+  }>().notNull(),
   competitorAnalysis: jsonb("competitor_analysis").$type<{
     mainCompetitor: string;
     competitorSentiment: number;
     competitorMentions: number;
     advantage: string;
-  }>(),
-  contentSuggestions: jsonb("content_suggestions").$type<string[]>(),
-  campaignTitles: jsonb("campaign_titles").$type<string[]>(),
+  }>().notNull(),
+  contentSuggestions: jsonb("content_suggestions").$type<string[]>().notNull(),
+  campaignTitles: jsonb("campaign_titles").$type<string[]>().notNull(),
   naijaSentiment: jsonb("naija_sentiment").$type<{
     pidginPhrases: string[];
     streetSlangAnalysis: string;
-  }>(),
+  }>().notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
