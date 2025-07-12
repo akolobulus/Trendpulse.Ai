@@ -47,19 +47,40 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  // Setup CORS for production
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
+  });
+
+  // Only setup vite in development
+  if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // In production, just serve the API
+    app.get('/', (req, res) => {
+      res.json({ 
+        message: 'TrendPulse.AI API is running',
+        version: '1.0.0',
+        endpoints: {
+          analyze: 'POST /api/analyze',
+          getAnalysis: 'GET /api/analysis/:query',
+          generateReport: 'POST /api/generate-report',
+          generateContent: 'POST /api/generate-content'
+        }
+      });
+    });
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // Use PORT environment variable for deployment platforms
+  const port = process.env.PORT || 5000;
   server.listen({
     port,
     host: "0.0.0.0",

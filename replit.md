@@ -10,6 +10,16 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### July 11, 2025
+- **Production Deployment Setup**: Configured project for Vercel + Heroku deployment
+  - Separated frontend/backend architecture for independent deployment
+  - Added CORS configuration for cross-origin API requests
+  - Created deployment scripts and configuration files
+  - Set up environment variable handling for production
+  - Added comprehensive deployment documentation
+  - Fixed API URL handling for different environments
+  - Created build processes for both frontend and backend
+
 ### July 9, 2025
 - **Responsive Design Overhaul**: Implemented comprehensive responsive design improvements
   - Added mobile-first approach with touch-friendly interfaces
@@ -108,16 +118,29 @@ Preferred communication style: Simple, everyday language.
 
 ## Deployment Strategy
 
+### Production Architecture
+- **Frontend**: React application deployed on Vercel
+- **Backend**: Node.js/Express API deployed on Heroku
+- **Database**: Neon PostgreSQL (serverless)
+- **Separation**: Complete frontend/backend separation for scalability
+
 ### Build Process
-- **Frontend**: Vite builds React application to `/dist/public`
-- **Backend**: esbuild bundles Node.js application to `/dist/index.js`
+- **Frontend**: Vite builds React application for static hosting
+- **Backend**: esbuild bundles Node.js application for Heroku
 - **Development**: Vite dev server with HMR for frontend, tsx for backend
 
 ### Environment Configuration
-- **Database**: Requires `DATABASE_URL` environment variable
-- **Gemini**: Requires `GEMINI_API_KEY` environment variable
+- **Backend (Heroku)**: `DATABASE_URL`, `GEMINI_API_KEY`, `FRONTEND_URL`, `NODE_ENV`
+- **Frontend (Vercel)**: `VITE_API_URL`
 - **Development**: Automatic Vite development server setup
-- **Production**: Serves static files and API from single Express server
+- **Production**: Separate deployments with CORS-enabled API communication
+
+### Deployment Files
+- `Procfile`: Heroku process configuration
+- `vercel.json`: Vercel deployment configuration
+- `Dockerfile`: Container configuration for Heroku
+- `build.sh`: Automated build script for deployment preparation
+- `DEPLOYMENT.md`: Complete deployment guide
 
 ### Development Workflow
 - **Hot Reload**: Vite HMR for frontend changes
