@@ -1,14 +1,16 @@
-import { ChartLine, Search, Heart, Map, Hash, FileText, X } from "lucide-react";
+import { ChartLine, Search, Heart, Map, Hash, FileText, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Link, useLocation } from "wouter";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: ChartLine, current: true },
-  { name: "Trend Search", href: "#", icon: Search, current: false },
-  { name: "Sentiment Analysis", href: "#", icon: Heart, current: false },
-  { name: "Regional Insights", href: "#", icon: Map, current: false },
-  { name: "Keywords", href: "#", icon: Hash, current: false },
-  { name: "Reports", href: "#", icon: FileText, current: false },
+  { name: "Dashboard", href: "/", icon: ChartLine },
+  { name: "About Developer", href: "/about", icon: User },
+  { name: "Trend Search", href: "#", icon: Search },
+  { name: "Sentiment Analysis", href: "#", icon: Heart },
+  { name: "Regional Insights", href: "#", icon: Map },
+  { name: "Keywords", href: "#", icon: Hash },
+  { name: "Reports", href: "#", icon: FileText },
 ];
 
 interface SidebarProps {
@@ -17,6 +19,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const [location] = useLocation();
+  
   return (
     <>
       {/* Mobile backdrop */}
@@ -42,32 +46,51 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         
         <nav className="p-4">
           <div className="space-y-2">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center space-x-3 p-3 rounded-lg transition-colors",
-                  item.current
-                    ? "text-primary bg-secondary"
-                    : "text-gray-700 hover:bg-gray-50"
-                )}
-                onClick={() => {
-                  // Close mobile menu when item is clicked
-                  if (window.innerWidth < 1024) {
-                    onClose();
-                  }
-                }}
-              >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
-                <span className={cn(
-                  "font-medium truncate", 
-                  item.current && "font-semibold"
-                )}>
-                  {item.name}
-                </span>
-              </a>
-            ))}
+            {navigation.map((item) => {
+              const isCurrent = location === item.href;
+              const isClickable = item.href !== "#";
+              
+              if (isClickable) {
+                return (
+                  <Link key={item.name} href={item.href}>
+                    <a
+                      className={cn(
+                        "flex items-center space-x-3 p-3 rounded-lg transition-colors",
+                        isCurrent
+                          ? "text-primary bg-secondary"
+                          : "text-gray-700 hover:bg-gray-50"
+                      )}
+                      onClick={() => {
+                        // Close mobile menu when item is clicked
+                        if (window.innerWidth < 1024) {
+                          onClose();
+                        }
+                      }}
+                    >
+                      <item.icon className="w-5 h-5 flex-shrink-0" />
+                      <span className={cn(
+                        "font-medium truncate", 
+                        isCurrent && "font-semibold"
+                      )}>
+                        {item.name}
+                      </span>
+                    </a>
+                  </Link>
+                );
+              }
+              
+              return (
+                <div
+                  key={item.name}
+                  className="flex items-center space-x-3 p-3 rounded-lg text-gray-400 cursor-not-allowed"
+                >
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-medium truncate">
+                    {item.name}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </nav>
       </aside>

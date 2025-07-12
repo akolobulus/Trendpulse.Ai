@@ -1,21 +1,21 @@
 # Deployment Guide for TrendPulse.AI
 
-This guide explains how to deploy the TrendPulse.AI application on Vercel (frontend) and Heroku (backend).
+This guide explains how to deploy the TrendPulse.AI application on Vercel (frontend) and Render (backend).
 
 ## Architecture Overview
 
 - **Frontend**: React application deployed on Vercel
-- **Backend**: Node.js/Express API deployed on Heroku
+- **Backend**: Node.js/Express API deployed on Render
 - **Database**: Neon PostgreSQL (already hosted)
 
 ## Prerequisites
 
 1. Vercel account
-2. Heroku account
+2. Render account
 3. Neon Database URL
-4. Google Gemini API key (optional, app works with mock data)
+4. Google Gemini API key (same key for both environments)
 
-## Backend Deployment (Heroku)
+## Backend Deployment (Render)
 
 ### Step 1: Prepare the Backend
 
@@ -30,8 +30,7 @@ cd trendpulse-backend
 cp -r server/ ./
 cp -r shared/ ./
 cp backend-package.json package.json
-cp Procfile ./
-cp Dockerfile ./
+cp render.yaml ./
 ```
 
 3. Install dependencies:
@@ -39,7 +38,7 @@ cp Dockerfile ./
 npm install
 ```
 
-### Step 2: Deploy to Heroku
+### Step 2: Deploy to Render
 
 1. Initialize git repository:
 ```bash
@@ -48,26 +47,25 @@ git add .
 git commit -m "Initial backend setup"
 ```
 
-2. Create Heroku app:
+2. Push to GitHub:
 ```bash
-heroku create your-app-name
-heroku buildpacks:set heroku/nodejs
+git remote add origin https://github.com/yourusername/trendpulse-backend.git
+git push -u origin main
 ```
 
-3. Set environment variables:
-```bash
-heroku config:set GEMINI_API_KEY=your_gemini_api_key
-heroku config:set DATABASE_URL=your_neon_database_url
-heroku config:set NODE_ENV=production
-heroku config:set FRONTEND_URL=https://your-vercel-app.vercel.app
-```
+3. Connect to Render:
+   - Go to https://render.com/
+   - Connect your GitHub repository
+   - Create a new Web Service
+   - Use the settings from `render.yaml`
 
-4. Deploy:
-```bash
-git push heroku main
-```
+4. Set environment variables in Render dashboard:
+   - `GEMINI_API_KEY`: Your Google Gemini API key
+   - `DATABASE_URL`: Your Neon database URL
+   - `NODE_ENV`: production
+   - `FRONTEND_URL`: https://your-vercel-app.vercel.app
 
-5. Your backend will be available at: `https://your-app-name.herokuapp.com`
+5. Your backend will be available at: `https://your-app-name.onrender.com`
 
 ## Frontend Deployment (Vercel)
 
@@ -111,7 +109,7 @@ vercel
 
 4. Set environment variables in Vercel dashboard:
    - Go to your project settings
-   - Add environment variable: `VITE_API_URL=https://your-heroku-app.herokuapp.com`
+   - Add environment variable: `VITE_API_URL=https://your-render-app.onrender.com`
 
 5. Your frontend will be available at: `https://your-project.vercel.app`
 
@@ -128,7 +126,7 @@ FRONTEND_URL=https://your-vercel-app.vercel.app
 
 ### Frontend (.env)
 ```
-VITE_API_URL=https://your-heroku-app.herokuapp.com
+VITE_API_URL=https://your-render-app.onrender.com
 ```
 
 ## Testing the Deployment
@@ -149,13 +147,13 @@ VITE_API_URL=https://your-heroku-app.herokuapp.com
 
 ### Debug Steps:
 
-1. Check Heroku logs: `heroku logs --tail`
+1. Check Render logs in the dashboard
 2. Check Vercel function logs in the dashboard
-3. Test API endpoints directly: `curl https://your-app.herokuapp.com/api/analyze`
+3. Test API endpoints directly: `curl https://your-app.onrender.com/api/analyze`
 
 ## Scaling Considerations
 
-- **Heroku**: Consider upgrading to paid dynos for better performance
+- **Render**: Free tier available, paid tiers for better performance
 - **Vercel**: Pro plan offers better analytics and performance
 - **Database**: Neon offers automatic scaling
 
@@ -176,6 +174,6 @@ VITE_API_URL=https://your-heroku-app.herokuapp.com
 ## Cost Estimation
 
 - **Vercel**: Free tier sufficient for moderate traffic
-- **Heroku**: $7/month for hobby dyno
+- **Render**: Free tier available, $7/month for starter plan
 - **Neon**: Free tier with 0.5GB storage
-- **Total**: ~$7-10/month for full deployment
+- **Total**: ~$0-10/month for full deployment

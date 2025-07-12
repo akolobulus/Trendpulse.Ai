@@ -10,6 +10,21 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### July 12, 2025
+- **About Developer Page**: Added comprehensive about page with social media links
+  - LinkedIn: https://www.linkedin.com/in/akolo-bulus
+  - Twitter: https://x.com/BulusAkolo
+  - Instagram: https://www.instagram.com/heisakolo
+  - GitHub: https://github.com/akolobulus
+  - Added navigation links in header and sidebar
+  - Professional developer profile with skills and project information
+- **Render Deployment**: Updated deployment configuration for Render + Vercel
+  - Switched from Heroku to Render for backend deployment
+  - Created render.yaml configuration file
+  - Updated deployment documentation and scripts
+  - Same Google Gemini API key for both environments
+  - Ready-to-deploy configuration with single upload
+
 ### July 11, 2025
 - **Production Deployment Setup**: Configured project for Vercel + Heroku deployment
   - Separated frontend/backend architecture for independent deployment
@@ -70,7 +85,8 @@ Preferred communication style: Simple, everyday language.
 
 ### Frontend Components
 - **Dashboard**: Main application view with metrics, charts, and insights (fully responsive)
-- **Header**: Responsive navigation with mobile menu toggle
+- **About Page**: Developer profile with social media links and project information
+- **Header**: Responsive navigation with mobile menu toggle and page links
 - **Sidebar**: Collapsible navigation with mobile drawer functionality
 - **Search Form**: Query input with category filtering and analysis triggers (mobile-optimized)
 - **Metrics Cards**: Key performance indicators display (responsive grid layout)
@@ -120,7 +136,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Production Architecture
 - **Frontend**: React application deployed on Vercel
-- **Backend**: Node.js/Express API deployed on Heroku
+- **Backend**: Node.js/Express API deployed on Render
 - **Database**: Neon PostgreSQL (serverless)
 - **Separation**: Complete frontend/backend separation for scalability
 
@@ -130,15 +146,14 @@ Preferred communication style: Simple, everyday language.
 - **Development**: Vite dev server with HMR for frontend, tsx for backend
 
 ### Environment Configuration
-- **Backend (Heroku)**: `DATABASE_URL`, `GEMINI_API_KEY`, `FRONTEND_URL`, `NODE_ENV`
+- **Backend (Render)**: `DATABASE_URL`, `GEMINI_API_KEY`, `FRONTEND_URL`, `NODE_ENV`
 - **Frontend (Vercel)**: `VITE_API_URL`
 - **Development**: Automatic Vite development server setup
 - **Production**: Separate deployments with CORS-enabled API communication
 
 ### Deployment Files
-- `Procfile`: Heroku process configuration
+- `render.yaml`: Render deployment configuration
 - `vercel.json`: Vercel deployment configuration
-- `Dockerfile`: Container configuration for Heroku
 - `build.sh`: Automated build script for deployment preparation
 - `DEPLOYMENT.md`: Complete deployment guide
 
@@ -153,3 +168,4 @@ Preferred communication style: Simple, everyday language.
 - **Static Assets**: Express serves built frontend from `/dist/public`
 - **Error Handling**: Structured error responses with appropriate HTTP status codes
 - **Session Management**: PostgreSQL-backed session storage
+- **Deployment Ready**: Single-upload deployment configuration for Render + Vercel
